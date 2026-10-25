@@ -1,0 +1,196 @@
+{
+  "meta": {
+    "url": "https://samad.email/app/",
+    "audit_date": "2026-10-25",
+    "language": "ar",
+    "pages_analyzed": 17,
+    "data_sources": [
+      "Raw HTTP fetch (curl)",
+      "Headless Chromium render (mobile 390px + desktop 1366px)",
+      "Lighthouse 12.8.2 lab run (local, mobile + desktop)",
+      "WordPress sitemaps (wp-sitemap.xml)",
+      "Crawler user-agent access tests"
+    ],
+    "limitations": [
+      "لا توجد بيانات Google Search Console أو CrUX (لا توجد بيانات اعتماد Google API، وحصة PageSpeed Insights العامة كانت مستنفدة)",
+      "قياسات الأداء معملية (Lighthouse) وليست بيانات مستخدمين حقيقيين",
+      "اختبارات الزواحف تمت بتزييف User-Agent من عنوان IP سحابي؛ قد تتعامل الاستضافة مع عناوين GPTBot الحقيقية بشكل مختلف",
+      "لا توجد بيانات روابط خلفية (لا مفاتيح Moz/Bing) ولا بيانات Google Business Profile"
+    ]
+  },
+  "summary": {
+    "health_score": 46,
+    "business_type": "خدمات محلية B2B/B2C — صيانة وتشغيل وإدارة مرافق في الرياض (Local Service)",
+    "top_findings": [
+      {"title": "محتوى الصفحة يُبنى بالكامل عبر JavaScript؛ HTML الخام يحتوي 3 كلمات فقط", "severity": "Critical"},
+      {"title": "أخبار تجريبية منشورة (\"عنوان خبر تجريبي...\") وعدّادات تظهر \"0+\"", "severity": "Critical"},
+      {"title": "الصفحة /app/ يتيمة: غير موجودة في خريطة الموقع ولا يربط إليها أي رابط داخلي", "severity": "High"},
+      {"title": "صورة المشاركة og:image وصورة Schema وأيقونات PWA تعيد 404", "severity": "High"},
+      {"title": "أداء الجوال ضعيف: Lighthouse 37/100، LCP = 6.6 ث، TBT = 1,050 مللي ث", "severity": "High"}
+    ],
+    "quick_wins": [
+      "رفع icon-192.png و icon-512.png إلى /app/ وإضافة صورة og:image بمقاس 1200×630",
+      "حذف أو استبدال الأخبار التجريبية الثلاثة بأخبار حقيقية",
+      "جعل العدّادات تعرض الأرقام الفعلية في HTML بدلاً من \"0+\"",
+      "إضافة /app/ إلى خريطة الموقع وربطها من الصفحة الرئيسية",
+      "إزالة تكرار H1 وتصحيح خطأ \"فير حلول\" إلى \"توفير حلول\""
+    ]
+  },
+  "categories": [
+    {
+      "name": "SEO التقني (Technical SEO)",
+      "score": 55,
+      "what_works": [
+        "HTTPS مفعّل، ووقت استجابة الخادم سريع (~110–120 مللي ث في Lighthouse)",
+        "robots.txt يسمح بالزحف ويشير إلى خريطة الموقع",
+        "meta robots = index,follow و canonical ذاتي صحيح على /app/",
+        "lang=\"ar\" و dir=\"rtl\" معرّفان بشكل صحيح، و viewport سليم",
+        "لا يوجد CLS على الجوال (0)"
+      ],
+      "findings": [
+        {"title": "المحتوى يُعرض من جهة العميل فقط (Client-Side Rendering)", "severity": "Critical", "description": "HTML الخام لـ /app/ يحتوي 3 كلمات و 0 عناوين و 0 روابط. كل المحتوى (الخدمات، المشاريع، الأخبار، الشركاء) يُجلب من Supabase عبر JavaScript بعد التحميل. جوجل يستطيع العرض لكن بتأخير وبموارد محدودة، وأغلب زواحف الذكاء الاصطناعي (GPTBot، ClaudeBot، PerplexityBot) لا تنفّذ JavaScript فترى صفحة فارغة.", "recommendation": "تقديم المحتوى الأساسي (H1، الخدمات، من نحن، بيانات التواصل) في HTML الأولي: إما عرض مسبق (prerender/SSG) عند كل تحديث في Supabase، أو تضمين نسخة ثابتة داخل HTML ثم تحديثها بالـ JS."},
+        {"title": "صفحة /app/ يتيمة وغير موجودة في خريطة الموقع", "severity": "High", "description": "wp-sitemap.xml لا يتضمن /app/، والصفحة الرئيسية https://samad.email/ لا تحتوي أي رابط إلى /app/. اكتشاف الصفحة يعتمد على الروابط الخارجية فقط.", "recommendation": "إضافة /app/ إلى خريطة الموقع (أو خريطة مستقلة يُشار إليها في robots.txt) وربطها من القائمة الرئيسية ومن تذييل موقع WordPress."},
+        {"title": "حظر GPTBot بالخطأ 429 على /app/", "severity": "High", "description": "طلبات بـ User-Agent الخاص بـ GPTBot تحصل على 429 (Too Many Requests) بشكل متكرر على /app/، بينما تحصل على 200 على الصفحة الرئيسية. Googlebot و ClaudeBot و PerplexityBot و Bingbot حصلت على 200. يبدو أنها حماية من الاستضافة (Hostinger/LiteSpeed).", "recommendation": "مراجعة إعدادات حماية البوتات في hPanel/LiteSpeed والسماح لـ GPTBot و OAI-SearchBot إن كان الظهور في ChatGPT مطلوباً. التحقق من سجلات الخادم لعناوين GPTBot الحقيقية."},
+        {"title": "روابط/موارد مكسورة (404)", "severity": "High", "description": "https://samad.email/app/icon-192.png و icon-512.png تعيد 404 (مستخدمة في og:image و Schema و manifest و apple-touch-icon وإشعارات sw.js). /favicon.ico يعيد 404. في الصفحة الرئيسية: project_8.png و project_9.png تعيد 404.", "recommendation": "رفع الملفات المفقودة أو تصحيح المسارات، ثم التحقق بأداة Rich Results Test و Facebook Sharing Debugger."},
+        {"title": "حجم HTML كبير جداً (1.37 ميجابايت) بسبب صور base64 مضمّنة", "severity": "Medium", "description": "حوالي 588 كيلوبايت من HTML هي صور مضمّنة بصيغة base64 (PNG/SVG)، و ~106 كيلوبايت من JavaScript غير مستخدم داخل الصفحة. كل زيارة تُنزّل كل ذلك ولا يمكن تخزين الصور مؤقتاً بشكل منفصل.", "recommendation": "نقل الصور إلى ملفات خارجية بصيغة WebP/AVIF مع Cache-Control طويل، وفصل JavaScript الخاص بلوحة التطبيق (تسجيل الدخول، الحجوزات) عن صفحة الهبوط العامة."},
+        {"title": "غياب ترويسات الأمان", "severity": "Medium", "description": "لا توجد Strict-Transport-Security ولا X-Content-Type-Options ولا Referrer-Policy ولا Permissions-Policy. سياسة CSP الحالية تحتوي فقط upgrade-insecure-requests.", "recommendation": "إضافة HSTS (max-age=31536000; includeSubDomains) و X-Content-Type-Options: nosniff و Referrer-Policy: strict-origin-when-cross-origin عبر .htaccess أو hPanel."},
+        {"title": "كشف أسماء المستخدمين ومعلومات WordPress", "severity": "Medium", "description": "/wp-json/wp/v2/users يكشف اسم المستخدم الإداري (it@smd.com.sa)، وصفحة المؤلف /author/itsmd-com-sa/ مفهرسة، و /readme.html متاح، وترويسة X-Powered-By تكشف إصدار PHP 8.3.35.", "recommendation": "تعطيل نقطة users في REST API للزوار، وإعادة توجيه أو منع فهرسة صفحات المؤلف والتصنيف Uncategorized، وحذف readme.html، وإخفاء X-Powered-By."},
+        {"title": "النسخة الإنجليزية من /app/ غير قابلة للفهرسة", "severity": "Low", "description": "زر EN يغيّر اللغة من جهة العميل على نفس الرابط، فلا يوجد عنوان URL مستقل للمحتوى الإنجليزي ولا hreflang. /en/app/ يعيد 404.", "recommendation": "إن كان الجمهور الإنجليزي مهماً: إنشاء /en/app/ بمحتوى معروض مسبقاً مع hreflang متبادل (ar, en, x-default)."}
+      ]
+    },
+    {
+      "name": "جودة المحتوى (Content Quality / E-E-A-T)",
+      "score": 40,
+      "what_works": [
+        "نص عربي واضح وموجّه للسوق المحلي (الرياض) مع رسالة ورؤية",
+        "خدمات محددة (الصيانة الوقائية، التكييف والكهرباء، إدارة المرافق، السباكة، الترميم) مع وصف مختصر لكل منها",
+        "مسارات تحويل واضحة: نموذج طلب خدمة، واتساب، اتصال"
+      ],
+      "findings": [
+        {"title": "أخبار تجريبية منشورة على الموقع الحي", "severity": "Critical", "description": "قسم \"آخر الأخبار\" يعرض ثلاثة عناوين تبدأ بـ \"عنوان خبر تجريبي عن...\". هذا يضر بالثقة (Trust) مباشرة، وهو أهم عنصر في E-E-A-T، ويُعد إشارة محتوى منخفض الجودة لدى مُقيّمي الجودة.", "recommendation": "حذف القسم فوراً أو استبداله بأخبار حقيقية مؤرخة (عقود موقعة، مشاريع مسلّمة) بصفحات مستقلة لكل خبر."},
+        {"title": "العدّادات تعرض \"0+\"", "severity": "High", "description": "\"0+ طلب صيانة منجز\"، \"0+ منشأة تحت التشغيل\"، \"0+ فني ومهندس\". الأرقام تتحرك فقط عند التمرير، لذا يراها الزاحف (وأي مستخدم لم يمرر) أصفاراً — رسالة عكسية تماماً.", "recommendation": "وضع الأرقام الحقيقية في HTML، واستخدام الحركة كتحسين بصري فقط (العدّ من الرقم الفعلي إلى نفسه أو من 0 مع النص النهائي في aria-label وفي HTML)."},
+        {"title": "محتوى رقيق ومكرر", "severity": "High", "description": "الصفحة ~528 كلمة لكن بطاقات الخدمات الخمس مكررة 3 مرات في DOM (نسخ الدوّار)، فالمحتوى الفريد أقل من ذلك بكثير. مشروع واحد فقط (ريفيرا 31). صفحات خدمات WordPress الخمس (عربي + إنجليزي) تحتوي 17–24 كلمة فقط.", "recommendation": "إنشاء صفحة مستقلة لكل خدمة (500–800 كلمة: النطاق، المنهجية، الأحياء المخدومة، أسئلة شائعة، صور حقيقية، دراسة حالة)، وصفحة لكل مشروع مع أرقام ونتائج."},
+        {"title": "إشارات الخبرة والموثوقية ضعيفة", "severity": "High", "description": "لا يوجد رقم سجل تجاري، ولا شهادات/تراخيص، ولا أسماء فريق أو مهندسين، ولا تقييمات عملاء، ولا عنوان كامل ظاهر (يظهر \"الرياض\" فقط بينما العنوان الكامل موجود في Schema فقط). شعارات الشركاء بنص بديل عام \"شعار شريك\".", "recommendation": "إضافة: رقم السجل التجاري والرقم الضريبي، الشهادات (مثل تصنيف المقاولين، ISO إن وجد)، فريق القيادة، شهادات عملاء موثقة بأسماء، العنوان الكامل وخريطة، وأسماء الشركاء الفعلية."},
+        {"title": "أخطاء نصية وتناقض في اسم العلامة", "severity": "Medium", "description": "\"فير حلول صيانة\" بدلاً من \"توفير حلول صيانة\". العلامة في /app/ هي \"سمد للصيانة\" بينما الموقع الرئيسي يستخدم \"سمد الهمم\"، والبريد على نطاق مختلف smd.com.sa. هذا يربك فهم الكيان (Entity) لدى جوجل والذكاء الاصطناعي.", "recommendation": "توحيد الاسم القانوني والتجاري في كل الصفحات و Schema و Google Business Profile، وتوضيح العلاقة بين \"سمد الهمم\" و \"سمد للصيانة\" إن كانا كيانين."}
+      ]
+    },
+    {
+      "name": "SEO داخل الصفحة (On-Page SEO)",
+      "score": 50,
+      "what_works": [
+        "وصف meta جيد (~110 حرف) ويتضمن الخدمة والمدينة",
+        "تسلسل H2/H3 منطقي ويغطي الأقسام الأساسية",
+        "روابط \"تخطَّ إلى المحتوى\" وتسميات حقول النموذج موجودة (Lighthouse Accessibility = 100)"
+      ],
+      "findings": [
+        {"title": "عنوان الصفحة لا يستهدف أي كلمة بحث", "severity": "High", "description": "<title> = \"سمد للصيانة | SAMAD\" (19 حرفاً). لا يحتوي عبارات يبحث عنها العملاء مثل \"شركة صيانة في الرياض\" أو \"إدارة مرافق\". العنوان بعد العرض يصبح \"سمد للصيانة\" فقط.", "recommendation": "مثال: \"سمد للصيانة | صيانة وتشغيل وإدارة مرافق المجمعات السكنية في الرياض\" (≈ 60 حرفاً)."},
+        {"title": "تكرار H1", "severity": "Medium", "description": "يوجد عنصران H1 بنفس النص \"شريكك الموثوق للعقارات والصيانة والتشغيل\" (شريحتان في الدوّار). كما أن H1 لا يتضمن الخدمة الأساسية + المدينة.", "recommendation": "H1 واحد فقط، والشرائح الأخرى تستخدم عنصر p أو H2. مثال: \"صيانة وتشغيل المجمعات السكنية في الرياض\"."},
+        {"title": "لا توجد روابط داخلية لصفحات عميقة", "severity": "High", "description": "كل الروابط الداخلية (12) هي روابط # لأقسام نفس الصفحة. أزرار \"اطلب الخدمة\" (15) كلها روابط واتساب. لا يوجد رابط لصفحة خدمة أو مشروع أو خبر أو للموقع الرئيسي.", "recommendation": "ربط كل بطاقة خدمة بصفحة الخدمة، وكل مشروع بصفحته، وكل خبر بصفحته، مع إبقاء زر واتساب كدعوة ثانوية."},
+        {"title": "صفحات WordPress بلا وصف meta وعناوين مكررة النمط", "severity": "Medium", "description": "كل صفحات WordPress (17 رابطاً) بلا meta description. العناوين تبدأ بالعلامة \"سمد الهمم | SAMAD » ...\" بدلاً من الموضوع.", "recommendation": "تثبيت إضافة SEO (Rank Math أو Yoast) وكتابة عنوان ووصف فريد لكل صفحة يبدأ بالموضوع."},
+        {"title": "روابط التواصل الاجتماعي بلا نص", "severity": "Low", "description": "روابط X و Instagram و واتساب والهاتف في التذييل بلا نص مرئي (أيقونات فقط).", "recommendation": "إضافة aria-label وصفي لكل رابط أيقونة."}
+      ]
+    },
+    {
+      "name": "البيانات المنظمة (Schema)",
+      "score": 45,
+      "what_works": [
+        "Schema بصيغة JSON-LD موجود في HTML الخام (يقرؤه الزاحف دون JavaScript)",
+        "النوع HomeAndConstructionBusiness (فرع من LocalBusiness) مناسب، مع عنوان بريدي ومنطقة خدمة"
+      ],
+      "findings": [
+        {"title": "صورة Schema معطلة وحقول أساسية مفقودة", "severity": "High", "description": "image تشير إلى icon-192.png (404). لا يوجد telephone ولا email ولا logo ولا geo ولا openingHoursSpecification ولا sameAs ولا priceRange. الأهلية للظهور المعزز في المحلي تضعف.", "recommendation": "إضافة: telephone (+966506898111)، email، logo (ملف موجود)، image (صورة حقيقية للفريق/المشروع)، geo (خط الطول والعرض)، openingHoursSpecification (24/7 للطوارئ)، sameAs (X، Instagram، رابط Google Maps)، و hasOfferCatalog للخدمات."},
+        {"title": "لا يوجد Organization/WebSite/Service schema", "severity": "Medium", "description": "لا يوجد Organization مع logo و sameAs، ولا WebSite، ولا Service لكل خدمة، ولا BreadcrumbList. صفحات WordPress بلا أي Schema.", "recommendation": "إضافة Organization + WebSite على مستوى الموقع، و Service على كل صفحة خدمة، و NewsArticle على الأخبار الحقيقية، و BreadcrumbList."}
+      ]
+    },
+    {
+      "name": "الأداء (Core Web Vitals)",
+      "score": 45,
+      "what_works": [
+        "CLS = 0 على الجوال، و TTFB سريع",
+        "أداء سطح المكتب مقبول: Lighthouse 84، LCP = 1.7 ث",
+        "الخطوط محمّلة بشكل غير حاجب (media=print onload) مع font-display"
+      ],
+      "findings": [
+        {"title": "أداء الجوال ضعيف (معملي)", "severity": "High", "description": "Lighthouse جوال: الأداء 37/100، FCP = 5.8 ث، LCP = 6.6 ث (العنصر: H1 في الشريحة الأولى)، TBT = 1,050 مللي ث، Speed Index = 7.8 ث. عمل الخيط الرئيسي 6.7 ث، منها 4.0 ث لكود الصفحة نفسها و 1.06 ث لمكتبة supabase-js (مهمة طويلة 1.19 ث).", "recommendation": "تقليل HTML (إزالة base64)، تأجيل supabase-js و gsap وكود لوحة التطبيق، عرض H1 بدون تأخير حركة (--delay)، وتقسيم JS. الهدف: LCP < 2.5 ث، INP < 200 مللي ث."},
+        {"title": "مخاطر INP من مهام JavaScript الطويلة", "severity": "Medium", "description": "10 مهام طويلة على الجوال، أطولها 1.19 ث (supabase-js). لا توجد بيانات INP ميدانية (CrUX غير متاح)، لكن TBT المرتفع مؤشر على INP ضعيف محتمل.", "recommendation": "تحميل supabase-js فقط عند التفاعل (فتح النموذج/تسجيل الدخول) أو جلب البيانات العامة عبر fetch بسيط لـ REST، وتقسيم المهام الطويلة."},
+        {"title": "تخزين مؤقت قصير للصور", "severity": "Low", "description": "12 صورة من Supabase Storage بمدة تخزين ساعة واحدة فقط.", "recommendation": "رفع Cache-Control للصور الثابتة إلى سنة مع أسماء ملفات ذات بصمة، أو تقديمها عبر CDN."}
+      ]
+    },
+    {
+      "name": "جاهزية البحث بالذكاء الاصطناعي (AI Search / GEO)",
+      "score": 30,
+      "what_works": [
+        "robots.txt لا يحظر أي زاحف ذكاء اصطناعي",
+        "ClaudeBot و PerplexityBot و OAI-SearchBot تحصل على 200"
+      ],
+      "findings": [
+        {"title": "المحتوى غير مرئي لزواحف الذكاء الاصطناعي", "severity": "Critical", "description": "زواحف ChatGPT و Claude و Perplexity لا تنفّذ JavaScript؛ ما تراه هو العنوان والوصف و Schema و 3 كلمات. لا يمكن اقتباس أي فقرة عن خدمات سمد في إجابات الذكاء الاصطناعي.", "recommendation": "نفس حل العرض المسبق (SSR/SSG). إضافة فقرات تعريفية قابلة للاقتباس (من نحن، ماذا نقدم، أين، لمن) بجمل كاملة ومستقلة."},
+        {"title": "GPTBot يحصل على 429", "severity": "High", "description": "انظر قسم SEO التقني. إن كان ذلك سلوك الاستضافة مع GPTBot الحقيقي فلن يُدرج الموقع في بيانات OpenAI.", "recommendation": "السماح لـ GPTBot و OAI-SearchBot في حماية البوتات بالاستضافة."},
+        {"title": "ضعف إشارات الكيان (Entity) والعلامة", "severity": "Medium", "description": "اسمان مختلفان للعلامة، نطاقان (samad.email و smd.com.sa — الأخير لم يستجب أثناء الفحص)، لا يوجد ظهور في نتائج البحث التي اختبرناها لاسم \"سمد للصيانة\". لا يوجد llms.txt (اختياري ولا تستخدمه جوجل).", "recommendation": "توحيد الاسم، إنشاء/تحديث Google Business Profile و LinkedIn ودليل المقاولين، وربطها عبر sameAs. llms.txt اختياري ومنخفض الأولوية."}
+      ]
+    },
+    {
+      "name": "الصور (Images)",
+      "score": 50,
+      "what_works": [
+        "Lighthouse يجتاز فحص النص البديل (الصور الزخرفية بـ alt فارغ)",
+        "لا توجد صور مكسورة داخل /app/ نفسها"
+      ],
+      "findings": [
+        {"title": "صور base64 مضمّنة وصيغ قديمة", "severity": "Medium", "description": "~588 كيلوبايت من الصور مضمّنة في HTML (PNG). توفير متوقع 497 كيلوبايت بالتحويل إلى WebP/AVIF و 246 كيلوبايت بأحجام متجاوبة. الصور بلا width/height.", "recommendation": "تحويل إلى WebP/AVIF، استخدام srcset، إضافة width/height، و loading=\"lazy\" لما تحت الطية."},
+        {"title": "صورة المشاركة الاجتماعية غير صالحة", "severity": "High", "description": "og:image = icon-192.png (404، وحتى لو وُجدت فهي 192×192 — صغيرة جداً). twitter:card = summary. مشاركة الرابط في واتساب/X/LinkedIn ستظهر بلا صورة.", "recommendation": "صورة 1200×630 تحمل الشعار ورسالة الخدمة، مع og:image:width/height و twitter:card = summary_large_image."},
+        {"title": "نص بديل عام لشعارات الشركاء", "severity": "Low", "description": "7 شعارات بنص \"شعار شريك\" المتكرر.", "recommendation": "استخدام اسم الشريك الفعلي في alt."}
+      ]
+    },
+    {
+      "name": "SEO المحلي (Local SEO)",
+      "score": 40,
+      "what_works": [
+        "Schema يتضمن عنواناً في حي الصحافة بالرياض ومنطقة الخدمة",
+        "أرقام تواصل وواتساب ظاهرة"
+      ],
+      "findings": [
+        {"title": "تناقض بيانات NAP", "severity": "High", "description": "الهاتف في التذييل 0506898111 بينما واتساب 966509035489+. العنوان الكامل غير ظاهر على الصفحة (فقط \"الرياض\")، ويظهر في Schema فقط. اسم العلامة يختلف بين الصفحات.", "recommendation": "اعتماد اسم وعنوان ورقم أساسي واحد بنفس الصيغة في الموقع و Schema و Google Business Profile والأدلة."},
+        {"title": "لا توجد صفحات مواقع/أحياء", "severity": "Medium", "description": "الصفحة تذكر الرياض وجدة والدمام والخبر ومكة وأحياء (الملقا، العليا، النرجس، حطين) لكن بلا صفحات أو محتوى لكل منطقة. Schema يذكر areaServed = الرياض فقط.", "recommendation": "صفحة واحدة لكل مدينة مخدومة فعلياً بمحتوى فريد (مشاريع في المدينة، الفريق المحلي، زمن الاستجابة). تحديث areaServed."},
+        {"title": "حالة Google Business Profile غير معروفة", "severity": "Info", "description": "لم نتمكن من التحقق من وجود ملف نشاط تجاري على Google (لا بيانات API).", "recommendation": "التحقق من وجود الملف وتوثيقه وربطه من الموقع (sameAs + زر خرائط جوجل)."}
+      ]
+    }
+  ],
+  "action_plan": {
+    "phases": [
+      {"name": "المرحلة 1: إصلاحات حرجة", "timeframe": "الأسبوع 1", "items": [
+        "حذف الأخبار التجريبية أو استبدالها بأخبار حقيقية",
+        "إظهار الأرقام الحقيقية في العدّادات بدلاً من 0+",
+        "رفع icon-192.png و icon-512.png و favicon.ico وصورة og:image 1200×630",
+        "إضافة /app/ إلى خريطة الموقع وربطها من الصفحة الرئيسية",
+        "مراجعة حماية البوتات في Hostinger للسماح بـ GPTBot",
+        "تصحيح \"فير حلول\" وإزالة تكرار H1 وتحديث <title>"
+      ]},
+      {"name": "المرحلة 2: تحسينات عالية الأثر", "timeframe": "الأسبوع 2–3", "items": [
+        "عرض مسبق (Prerender/SSG) للمحتوى العام في HTML",
+        "إزالة صور base64 وتحويل الصور إلى WebP/AVIF",
+        "تأجيل supabase-js و gsap وفصل كود لوحة التطبيق",
+        "استكمال LocalBusiness Schema وإضافة Organization و WebSite",
+        "توحيد NAP واسم العلامة في كل مكان",
+        "إضافة ترويسات الأمان وإغلاق كشف مستخدمي WordPress"
+      ]},
+      {"name": "المرحلة 3: المحتوى والسلطة", "timeframe": "الشهر 2", "items": [
+        "صفحة مستقلة لكل خدمة (500–800 كلمة) مع Service Schema",
+        "صفحات مشاريع ودراسات حالة بأرقام وصور حقيقية",
+        "إشارات الثقة: السجل التجاري، الشهادات، الفريق، تقييمات العملاء",
+        "توثيق Google Business Profile وبناء الاستشهادات المحلية",
+        "صفحات المدن المخدومة فعلياً"
+      ]},
+      {"name": "المرحلة 4: المتابعة والتحسين", "timeframe": "مستمر", "items": [
+        "ربط Google Search Console وإرسال خريطة الموقع ومراقبة الفهرسة",
+        "متابعة Core Web Vitals الميدانية (CrUX) شهرياً",
+        "التقاط خط أساس drift بعد الإصلاحات ومقارنته بعد كل نشر",
+        "نشر خبر/مشروع حقيقي شهرياً على الأقل"
+      ]}
+    ]
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/"
+  }
+}
